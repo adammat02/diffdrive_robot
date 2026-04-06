@@ -61,11 +61,26 @@ def generate_launch_description():
         arguments=['/camera/image_raw']
     )
 
+    rviz_config = os.path.join(
+        get_package_share_directory(package_name), 'config', 'rviz.rviz'
+    )
+
+    rviz = Node(
+        package='rviz2',
+        executable='rviz2',
+        arguments=[
+            '-d',
+            rviz_config
+        ],
+        output='screen'
+    )
+
     return LaunchDescription([
         rsp,
         world_args,
         gazebo,
         spawn,
         ros_gz_bridge,
-        ros_gz_image_bridge
+        ros_gz_image_bridge,
+        rviz
     ])
