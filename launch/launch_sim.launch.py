@@ -22,9 +22,13 @@ def generate_launch_description():
 
     world = LaunchConfiguration('world')
 
+    default_world = os.path.join(
+        get_package_share_directory(package_name), 'worlds', 'empty.sdf'
+    )
+
     world_args = DeclareLaunchArgument(
         'world',
-        default_value='empty.sdf',
+        default_value=default_world,
         description='World to load'
     )
 
