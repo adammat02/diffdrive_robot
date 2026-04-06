@@ -13,11 +13,19 @@ def generate_launch_description():
     
     package_name = "diffdrive_robot"
 
+    use_ros2_control = LaunchConfiguration('use_ros2_control')
+
+    use_ros2_control_args = DeclareLaunchArgument(
+        'use_ros2_control',
+        default_value='true',
+        description='Use ros2_control if true'
+    )
+
     rsp = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory(package_name), 'launch', 'rsp.launch.py'
             )]),
-            launch_arguments={'use_sim_time': 'true'}.items()
+            launch_arguments={'use_sim_time': 'true', 'use_ros2_control': use_ros2_control}.items()
     )
 
     world = LaunchConfiguration('world')
@@ -61,6 +69,22 @@ def generate_launch_description():
         arguments=['/camera/image_raw']
     )
 
+    diff_drive_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=[
+            'diff_cont',
+            '--controller-ros-args',
+            '-r /diff_cont/cmd_vel:=/cmd_vel'
+        ]
+    )
+
+    joint_broad_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['joint_broad']   
+    )
+
     rviz_config = os.path.join(
         get_package_share_directory(package_name), 'config', 'rviz.rviz'
     )
@@ -76,11 +100,14 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
+        use_ros2_control_args,
         rsp,
         world_args,
         gazebo,
         spawn,
         ros_gz_bridge,
         ros_gz_image_bridge,
+        diff_drive_spawner,
+        joint_broad_spawner,
         rviz
     ])
