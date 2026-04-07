@@ -28,6 +28,10 @@
         <plugin name="gz_ros2_control::GazeboSimROS2ControlPlugin" filename="libgz_ros2_control-system.so">
             <parameters>$(find diffdrive_robot)/config/my_controllers.yaml</parameters>
         </plugin>
+
+        <plugin
+            filename="gz-sim-imu-system" name="gz::sim::systems::Imu">
+        </plugin>
     </gazebo>
 
 </robot>
