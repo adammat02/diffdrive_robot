@@ -85,6 +85,18 @@ def generate_launch_description():
         arguments=['joint_broad']   
     )
 
+    ekf_config = os.path.join(
+        get_package_share_directory(package_name), 'config', 'ekf.yaml'
+    )
+
+    ekf = Node(
+        package='robot_localization',
+        executable='ekf_node',
+        name='ekf_filter_node',
+        output='screen',
+        parameters=[ekf_config, {'use_sim_time': True}]
+    )
+
     rviz_config = os.path.join(
         get_package_share_directory(package_name), 'config', 'rviz.rviz'
     )
@@ -109,5 +121,6 @@ def generate_launch_description():
         ros_gz_image_bridge,
         diff_drive_spawner,
         joint_broad_spawner,
+        ekf,
         rviz
     ])
